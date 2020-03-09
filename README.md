@@ -1,7 +1,10 @@
 # Spring Cloud Streams with Okta Auth
  
 This example app shows how to create a Spring Cloud Streams app using Spring WebFlux and JWT OAuth. The app 
-demonstrates how to publish and subscribe to topics, as well as how to stream events from a WebFlux REST endpoint.
+demonstrates how to publish and subscribe to topics, as well as how to stream events from a WebFlux REST endpoint. It generates
+a random stream of integers, which it publishes to the `ints` channel. A processor listens to this channel, calculates a running
+total, and publishes the total and the current value to the `total` channel. A WebFlux endpoint publishes the `total` channel as
+an events stream.
 
 Please read [FINAL TITLE HERE](https://<need.a.link>) to see how this app was created.
 
@@ -37,14 +40,25 @@ git clone https://<need.a.link> spring-cloud-streams
 cd spring-cloud-streams
 ```
 
-This will get a copy of the project installed locally. Before the projects apps will run, however, you need to create an OIDC application in Okta and configure the client and server to use it.
+This will get a copy of the project installed locally. Before the projects apps will run, however, you need to create an OIDC application in Okta and configure the application to use it.
 
 ## Create an Okta OIDC Application
 
-The fastest way to do this is to use the Okta Maven Plugin, which will configure an OIDC application for you. This places the necessary values in the `src/main/resources/application.yml` file.
+The fastest way to do this is to use the Okta Maven Plugin, which will configure an OIDC application for you.
 
 ```bash
 mvn com.okta:okta-maven-plugin:setup
+```
+
+This places the necessary values in the `src/main/resources/application.yml` file. If you create an OIDC application manually on the Okta website,
+just make sure you put the necessary values in the `application.yml` file.
+
+```yaml
+okta:
+  oauth2:
+    client-secret: {yourClientSecret}
+    client-id: {yourClientId}
+    issuer: https://{yourOktaDomain}/oauth2/default
 ```
 
 If you already have an Okta developer account and Okta Org, you can create a configuration file at `~/.okta/okta.yaml` for Okta Maven Plugin that will use that account.
@@ -73,6 +87,30 @@ To run the Spring Boot application, open a new shell and run the following.
  
 ```bash
 ./mvnw spring-boot:run
+```
+## Testing the Application
+
+You will need to generate a JWT to test the application. To do this, you can use the [OIDC Debugger](https://oidcdebugger.com/). For full instructions, see the blog post associated with this project.
+
+Once you have a token, store it in a shell variable and run a request using HTTPie.
+
+```bash
+TOKEN={your token value}
+http --stream :8080/sse "Authorization: Bearer ${TOKEN}"
+```
+You should see some streaming data.
+
+```bash
+...
+data:{"currentValue":57,"total":6055}
+data:{"currentValue":1,"total":6056}
+data:{"currentValue":2,"total":6058}
+data:{"currentValue":10,"total":6068}
+data:{"currentValue":62,"total":6130}
+data:{"currentValue":29,"total":6159}
+data:{"currentValue":85,"total":6244}
+data:{"currentValue":84,"total":6328}
+...
 ```
 
 ## Links
