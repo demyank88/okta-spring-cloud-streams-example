@@ -117,9 +117,10 @@ data:{"currentValue":84,"total":6328}
 
 This example uses the following open source libraries:
 
-* [React](https://reactjs.org/)
+* [Spring Cloud Streams](https://spring.io/projects/spring-cloud-stream)
 * [Spring Boot](https://spring.io/projects/spring-boot)
 * [Spring Security](https://spring.io/projects/spring-security)
+* [RabbitMQ](https://www.rabbitmq.com/)
 
 ## Help
 
