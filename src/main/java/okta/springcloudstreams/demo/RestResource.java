@@ -28,7 +28,7 @@ public class RestResource {
         return recordFlux ->
                 recordFlux
                         .doOnNext(this.streamProcessor::onNext)
-                        .doOnNext(value -> logger.info("*" +value))
+                        .doOnNext(value -> logger.info("*" + value))
                         .subscribe();
     }
 }
