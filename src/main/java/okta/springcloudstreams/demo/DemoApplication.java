@@ -21,56 +21,49 @@ import java.util.function.Supplier;
 @EnableReactiveMethodSecurity
 public class DemoApplication {
 
-	private static Logger logger = LoggerFactory.getLogger(DemoApplication.class);
+    private static Logger logger = LoggerFactory.getLogger(DemoApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
-	@Bean
-	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-		http
-				.authorizeExchange()
-				.anyExchange().authenticated()
-				.and()
-				.oauth2ResourceServer()
-				.jwt();
-		return http.build();
-	}
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        http
+            .authorizeExchange(authorizeExchange ->
+                    authorizeExchange.anyExchange().authenticated())
+            .oauth2ResourceServer().jwt();
+        return http.build();
+    }
 
-	static class Accumulator {
+    static class Accumulator {
 
-		private AtomicInteger count = new AtomicInteger(0);
+        private AtomicInteger count = new AtomicInteger(0);
 
-		@Bean
-		public Function<Integer, AccumulatorMessage> accumulate() {
-			return payload -> new AccumulatorMessage(payload ,this.count.addAndGet(payload));
-		}
+        @Bean
+        public Function<Integer, AccumulatorMessage> accumulate() {
+            return payload -> new AccumulatorMessage(payload, this.count.addAndGet(payload));
+        }
 
-	}
+    }
 
-	static class Source {
+    static class Source {
 
-		private Random random = new Random();
+        private Random random = new Random();
 
-		@Bean
-		public Supplier<Integer> send() {
-			return () -> {
-				return random.nextInt(100);
-			};
+        @Bean
+        public Supplier<Integer> send() {
+            return () -> random.nextInt(100);
+        }
+    }
 
-		}
-	}
+    static class Sink {
 
-	static class Sink {
-
-		@Bean
-		public Consumer<AccumulatorMessage> receive() {
-			return payload -> {
-				logger.info(payload.toString());
-			};
-		}
-
-	}
-
+        @Bean
+        public Consumer<AccumulatorMessage> receive() {
+            return payload -> {
+                logger.info(payload.toString());
+            };
+        }
+    }
 }
