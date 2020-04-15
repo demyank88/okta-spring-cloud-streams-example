@@ -6,21 +6,15 @@ a random stream of integers, which it publishes to the `ints` channel. A process
 total, and publishes the total and the current value to the `total` channel. A WebFlux endpoint publishes the `total` channel as
 an events stream.
 
-Please read [FINAL TITLE HERE](https://<need.a.link>) to see how this app was created.
-
-#### ^-- TODO: needs a link --^
+Please read [A Quick Guide to Spring Cloud Stream](https://developer.okta.com/blog/2020/04/15/spring-cloud-stream) to see how this app was created.
 
 **Prerequisites:** 
 
-**Java 11**: This project uses Java 11. OpenJDK 11 will work just as well. Instructions are found on the [OpenJDK website](https://openjdk.java.net/install/). OpenJDK can also be installed using [Homebrew](https://brew.sh/). Alternatively, [SDKMAN](https://sdkman.io/) is another great option for installing and managing Java versions.
-
-**Maven**: You need Maven installed to bootstrap the project. Install it according to the instructions on [their website](https://maven.apache.org/install.html). Or use SDKMAN or Homebrew.
-
-**Okta Developer Account**: You’ll be using Okta as an OAuth/OIDC provider to add JWT authentication and authorization to the application. You can go to [our developer site](https://developer.okta.com/signup/) and sign up for a free developer account.
-
-**HTTPie**: This is a powerful command-line HTTP request utility that you'll use to test the WebFlux server. Install it according to [the docs on their site](https://httpie.org/doc#installation).
-
-**Docker** and **Docker Compose**: You'll use Docker and Docker Compose to run the RabbitMQ service. First you need to install Docker. On Mac and Windows you can install the desktop client. On Linux you'll need to install Docker Machine directly. Take a look at [the Docker docs for installation instructions.](https://docs.docker.com/) for your operating system. Once you have Docker installed, follow [the instructions to install Docker Compose](https://docs.docker.com/compose/install/).
+- **Java 11**: This project uses Java 11. OpenJDK 11 will work just as well. Instructions are found on the [OpenJDK website](https://openjdk.java.net/install/). OpenJDK can also be installed using [Homebrew](https://brew.sh/). Alternatively, [SDKMAN](https://sdkman.io/) is another great option for installing and managing Java versions.
+- **Maven**: You need Maven installed to bootstrap the project. Install it according to the instructions on [their website](https://maven.apache.org/install.html). Or use SDKMAN or Homebrew.
+- **Okta Developer Account**: You’ll be using Okta as an OAuth/OIDC provider to add JWT authentication and authorization to the application. You can go to [our developer site](https://developer.okta.com/signup/) and sign up for a free developer account.
+- **HTTPie**: This is a powerful command-line HTTP request utility that you'll use to test the WebFlux server. Install it according to [the docs on their site](https://httpie.org/doc#installation).
+- **Docker** and **Docker Compose**: You'll use Docker and Docker Compose to run the RabbitMQ service. First you need to install Docker. On Mac and Windows you can install the desktop client. On Linux you'll need to install Docker Machine directly. Take a look at [the Docker docs for installation instructions.](https://docs.docker.com/) for your operating system. Once you have Docker installed, follow [the instructions to install Docker Compose](https://docs.docker.com/compose/install/).
 
 > [Okta](https://developer.okta.com/) has Authentication and User Management APIs that reduce development time with instant-on, scalable user infrastructure. Okta's intuitive API and expert support make it easy for developers to authenticate, manage, and secure users and roles in any application.
 
@@ -36,22 +30,21 @@ Please read [FINAL TITLE HERE](https://<need.a.link>) to see how this app was cr
 To install this example application, run the following commands:
 
 ```bash
-git clone https://<need.a.link> spring-cloud-streams
-cd spring-cloud-streams
+git clone https://github.com/oktadeveloper/okta-spring-cloud-streams-example.git
+cd okta-spring-cloud-streams-example
 ```
 
 This will get a copy of the project installed locally. Before the projects apps will run, however, you need to create an OIDC application in Okta and configure the application to use it.
 
 ## Create an Okta OIDC Application
 
-The fastest way to do this is to use the Okta Maven Plugin, which will configure an OIDC application for you.
+The fastest way to do this is to use the [Okta Maven Plugin](https://github.com/oktadeveloper/okta-maven-plugin), which will configure an OIDC application for you.
 
 ```bash
 mvn com.okta:okta-maven-plugin:setup
 ```
 
-This places the necessary values in the `src/main/resources/application.yml` file. If you create an OIDC application manually on the Okta website,
-just make sure you put the necessary values in the `application.yml` file.
+This places the necessary values in the `src/main/resources/application.yml` file. If you create an OIDC application manually on the Okta website, just make sure you put the necessary values in the `application.yml` file.
 
 ```yaml
 okta:
@@ -88,6 +81,7 @@ To run the Spring Boot application, open a new shell and run the following.
 ```bash
 ./mvnw spring-boot:run
 ```
+
 ## Testing the Application
 
 You will need to generate a JWT to test the application. To do this, you can use the [OIDC Debugger](https://oidcdebugger.com/). For full instructions, see the blog post associated with this project.
@@ -98,6 +92,7 @@ Once you have a token, store it in a shell variable and run a request using HTTP
 TOKEN={your token value}
 http --stream :8080/sse "Authorization: Bearer ${TOKEN}"
 ```
+
 You should see some streaming data.
 
 ```bash
@@ -117,6 +112,8 @@ data:{"currentValue":84,"total":6328}
 
 This example uses the following open source libraries:
 
+* [Okta Maven Plugin](https://github.com/oktadeveloper/okta-maven-plugin)
+* [Okta Spring Boot starter](https://github.com/okta/okta-spring-boot)
 * [Spring Cloud Streams](https://spring.io/projects/spring-cloud-stream)
 * [Spring Boot](https://spring.io/projects/spring-boot)
 * [Spring Security](https://spring.io/projects/spring-security)
@@ -124,9 +121,7 @@ This example uses the following open source libraries:
 
 ## Help
 
-Please post any questions as comments on the [blog post](https://need.a.link), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if you'd like to create a support ticket.
-
-#### ^-- TODO: needs a link --^
+Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2020/04/15/spring-cloud-stream), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if you'd like to create a support ticket.
 
 ## License
 
